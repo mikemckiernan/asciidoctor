@@ -195,6 +195,10 @@ class Document < AbstractBlock
   # Public: Get or set the Boolean flag that indicates whether source map information should be tracked by the parser
   attr_accessor :sourcemap
 
+  # Public: Get or set the Boolean flag that indicates whether the test for conditional directives (ifdef, ifndef) are
+  # automatically set to true. This flag is only useful for parsing files with Asciidoctor.
+  attr_accessor :process_all_conditions
+
   # Public: Get the document catalog Hash
   attr_reader :catalog
 
@@ -324,6 +328,7 @@ class Document < AbstractBlock
       input_mtime = options.delete :input_mtime
       @compat_mode = attr_overrides.key? 'compat-mode'
       @sourcemap = options[:sourcemap]
+      @process_all_conditions = options[:process_all_conditions]
       @timings = options.delete :timings
       @path_resolver = PathResolver.new
       initialize_extensions = (defined? ::Asciidoctor::Extensions) || (options.key? :extensions) ? ::Asciidoctor::Extensions : nil

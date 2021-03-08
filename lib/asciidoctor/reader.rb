@@ -935,6 +935,9 @@ class PreprocessorReader < Reader
         else
           # if the attribute is undefined, then skip
           skip = !@document.attributes.key?(target)
+          if (skip && @document.process_all_conditions)
+            skip = false
+          end
         end
       when 'ifndef'
         if no_target
@@ -951,6 +954,9 @@ class PreprocessorReader < Reader
         else
           # if the attribute is defined, then skip
           skip = @document.attributes.key?(target)
+        end
+        if (skip && @document.process_all_conditions)
+          skip = false
         end
       when 'ifeval'
         if no_target

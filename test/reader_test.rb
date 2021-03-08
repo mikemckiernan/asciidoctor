@@ -2372,6 +2372,26 @@ class ReaderTest < Minitest::Test
           assert_empty logger
         end
       end
+
+      test 'should include content if process_all_conditions is true' do
+        input = <<~'EOS'
+        ifdef::attribute-not-set[]
+        content
+        endif::[]
+
+        ifndef::foo[]
+        free-for-all
+        endif::foo[]
+        EOS
+
+        doc = Asciidoctor::Document.new input, {process_all_conditions: true, sourcemap: true}
+        reader = doc.reader
+        lines = []
+        while reader.has_more_lines?
+          lines << reader.read_line
+        end
+        assert_equal "content\n\nfree-for-all", (lines * ::Asciidoctor::LF)
+      end
     end
   end
 end
